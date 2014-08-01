@@ -17,10 +17,10 @@ Once the plugin has been installed, it may be enabled inside your Gruntfile with
 grunt.loadNpmTasks('grunt_coffee_import');
 ```
 
-## The "slikland_coffee_import" task
+## The "grunt_coffee_import" task
 
 ### Overview
-In your project's Gruntfile, add a section named `grunt_coffee_import` to the data object passed into `grunt.initConfig()`.
+It helps you work with external coffee files. You have just to write the import command e.g.`#import lib.Class1`.
 
 ### Options
 
