@@ -1,6 +1,6 @@
 /*
- * grunt-slikland-coffee-import
- * https://github.com/victor.potasso/slikland-coffee-import
+ * grunt_coffee_import
+ * https://github.com/victorpotasso/grunt-coffee-import
  *
  * Copyright (c) 2014 Victor Potasso
  * Licensed under the MIT license.
@@ -12,7 +12,7 @@ module.exports = function(grunt)
 {
 	grunt.initConfig(
 	{
-		slikland_coffee_import:
+		grunt_coffee_import:
 		{
 			options:
 			{
@@ -28,5 +28,5 @@ module.exports = function(grunt)
 	});
 
 	grunt.loadTasks('tasks');
-	grunt.registerTask('default', ['slikland_coffee_import']);
+	grunt.registerTask('default', ['grunt_coffee_import']);
 };
