@@ -30,7 +30,6 @@ module.exports = function(grunt)
 				var file = classPath + classes[i];
 				coffeeClasses = [];
 				checkImports(file, classPath);
-				coffeeClasses.push(file);
 
 				// add options to compiler
 				var deployFile = deployPath + classes[i].replace('.coffee', '.js');
@@ -43,7 +42,7 @@ module.exports = function(grunt)
 					compileOptions[id]['files'][deployFile] = coffeeClasses;
 				}
 
-				grunt.log.writeln(classes[i] + " is checked.");
+				grunt.log.writeln(classes[i] + " is compiled successfully.");
 
 				i++;
 			}
@@ -53,7 +52,7 @@ module.exports = function(grunt)
 			grunt.task.run("coffee");
 		}
 		else {
-			grunt.log.error('node `files` is missing.');
+			grunt.fail.warn('node `files` is missing.');
 		}
 	});
 
@@ -67,13 +66,20 @@ module.exports = function(grunt)
 			while(match = regex.exec(contents))
 			{
 				var file = p_classPath + match[1].replace(/\./g,'/') + '.coffee'
-				coffeeClasses.unshift(file);
-				checkImports(file, p_classPath)
+				if (fs.existsSync(p_file))
+				{
+					coffeeClasses.unshift(file);
+					checkImports(file, p_classPath)
+				}
+				else {
+					grunt.fail.warn(file + ' not exist.');
+				}
 			}
 		}
 		else
 		{
-			grunt.log.error(p_file + ' not exist.');
+			grunt.fail.warn(p_file + ' not exist.');
 		}
+		coffeeClasses.push(p_file);
 	}
 };
