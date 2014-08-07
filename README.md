@@ -1,4 +1,4 @@
-# grunt_coffee_import
+# grunt-coffee-import
 
 > Import for Coffeescript
 
