@@ -14,7 +14,7 @@ npm install grunt_coffee_import --save-dev
 Once the plugin has been installed, it may be enabled inside your Gruntfile with this line of JavaScript:
 
 ```js
-grunt.loadNpmTasks('grunt_coffee_import');
+grunt.loadNpmTasks('grunt-coffee-import');
 ```
 
 ## The "grunt_coffee_import" task
