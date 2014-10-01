@@ -14,14 +14,19 @@ var path = require('path');
 module.exports = function(grunt)
 {
 	var coffeeClasses;
+	var compileOptions;
+	var options;
+	var classPath;
+	var deployPath;
+	var classes;
 
 	grunt.registerMultiTask('grunt_coffee_import', 'Import for Coffeescript', function()
 	{
-		var compileOptions = {}
-		var options = this.options();
-		var classPath = options.classPath || '';
-		var deployPath = options.deployPath || '';
-		var classes = this.data;
+		compileOptions = {}
+		options = this.options();
+		classPath = options.classPath || '';
+		deployPath = options.deployPath || '';
+		classes = this.data;
 		if(this.target === 'files')
 		{
 			var i=0;
@@ -29,7 +34,7 @@ module.exports = function(grunt)
 			{
 				var file = classPath + classes[i];
 				coffeeClasses = [];
-				checkImports(file, classPath);
+				checkImports(file, classPath, '');
 
 				// add options to compiler
 				var deployFile = deployPath + classes[i].replace('.coffee', '.js');
@@ -56,7 +61,7 @@ module.exports = function(grunt)
 		}
 	});
 
-	function checkImports(p_file,p_classPath)
+	function checkImports(p_file,p_classPath, p_parent)
 	{
 		if (fs.existsSync(p_file))
 		{
@@ -69,7 +74,7 @@ module.exports = function(grunt)
 				if (fs.existsSync(p_file))
 				{
 					coffeeClasses.unshift(file);
-					checkImports(file, p_classPath)
+					checkImports(file, p_classPath, p_file)
 				}
 				else {
 					grunt.fail.warn(file + ' not exist.');
@@ -78,8 +83,18 @@ module.exports = function(grunt)
 		}
 		else
 		{
-			grunt.fail.warn(p_file + ' not exist.');
+			fileNotFound(p_file, p_parent)
 		}
 		coffeeClasses.push(p_file);
+	}
+
+	function fileNotFound(p_file, p_context)
+	{
+		var file = p_file.replace(classPath, '');
+		var context = p_context.replace(classPath, '');
+		// var contents = fs.readFileSync(p_context, 'utf8');
+		// var line = null;
+		// console.log(contents);
+		grunt.fail.warn("Error to import " + file + " from " + context);
 	}
 };
