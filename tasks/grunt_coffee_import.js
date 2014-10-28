@@ -13,7 +13,6 @@ var path = require('path');
 
 module.exports = function(grunt)
 {
-	var coffeeClasses;
 	var compileOptions;
 	var options;
 	var classPath;
@@ -27,14 +26,16 @@ module.exports = function(grunt)
 		classPath = options.classPath || '';
 		deployPath = options.deployPath || '';
 		classes = this.data;
+
 		if(this.target === 'files')
 		{
 			var i=0;
 			while(i<classes.length)
 			{
 				var file = classPath + classes[i];
-				coffeeClasses = [];
-				checkImports(file, classPath, '');
+				var coffeeClasses = checkImports(file, classPath, '');
+
+				coffeeClasses = clearDuplicates(coffeeClasses);
 
 				// add options to compiler
 				var deployFile = deployPath + classes[i].replace('.coffee', '.js');
@@ -52,9 +53,11 @@ module.exports = function(grunt)
 				i++;
 			}
 
+
 			// Run compile
 			grunt.config('coffee',compileOptions);
 			grunt.task.run("coffee");
+
 		}
 		else {
 			grunt.fail.warn('node `files` is missing.');
@@ -63,18 +66,27 @@ module.exports = function(grunt)
 
 	function checkImports(p_file,p_classPath, p_parent)
 	{
+		var coffeeClasses = [];
 		if (fs.existsSync(p_file))
 		{
 			var contents = fs.readFileSync(p_file, 'utf8');
 			var regex = /#import\s+([^\s]+)/g;
 			var match;
+
+			var i = 0;
+			var arr;
 			while(match = regex.exec(contents))
 			{
 				var file = p_classPath + match[1].replace(/\./g,'/') + '.coffee'
 				if (fs.existsSync(p_file))
 				{
-					coffeeClasses.unshift(file);
-					checkImports(file, p_classPath, p_file)
+					coffeeClasses[i++] = file
+					arr = checkImports(file, p_classPath, p_file);
+					if(arr.length > 0)
+					{
+						coffeeClasses = [].concat(arr, coffeeClasses);
+						i = coffeeClasses.length;
+					}
 				}
 				else {
 					grunt.fail.warn(file + ' not exist.');
@@ -85,16 +97,33 @@ module.exports = function(grunt)
 		{
 			fileNotFound(p_file, p_parent)
 		}
-		coffeeClasses.push(p_file);
+		coffeeClasses[i++] = p_file;
+		return coffeeClasses;
 	}
 
 	function fileNotFound(p_file, p_context)
 	{
 		var file = p_file.replace(classPath, '');
 		var context = p_context.replace(classPath, '');
-		// var contents = fs.readFileSync(p_context, 'utf8');
-		// var line = null;
-		// console.log(contents);
 		grunt.fail.warn("Error to import " + file + " from " + context);
+	}
+
+	function clearDuplicates(arr)
+	{
+		var newArr = [];
+		var i = -1;
+		var l = arr.length
+		var c = 0;
+		var f;
+		while(++i < l)
+		{
+			f = arr[i];
+			if(newArr.indexOf(f) >= 0)
+			{
+				continue;
+			}
+			newArr[c++] = f;
+		}
+		return newArr;
 	}
 };
