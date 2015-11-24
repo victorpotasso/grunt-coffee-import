@@ -3,7 +3,7 @@
 > Import for Coffeescript
 
 * Source: [github.com/victorpotasso/grunt-coffee-import](https://github.com/victorpotasso/grunt-coffee-import)
-* NPM: [npmjs.org/package/grunt_coffee_import](https://www.npmjs.org/package/grunt-coffee-import)
+* NPM: [npmjs.org/package/grunt-coffee-import](https://www.npmjs.org/package/grunt-coffee-import)
 * Home Page: [victorpotasso.com/](http://www.victorpotasso.com)
 * Twitter: [@victorpotasso](https://twitter.com/victorpotasso)
 
